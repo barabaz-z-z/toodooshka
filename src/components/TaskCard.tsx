@@ -8,13 +8,13 @@ interface Props {
     onChanged?: Function;
 }
 
-export const TaskCard: React.FC<Props> = ({ task, onChanged: onTextChanged, onRemoving }) => {
+export const TaskCard: React.FC<Props> = ({ task, onChanged, onRemoving }) => {
     const [isEditionMode, setIsEditionMode] = useState(false);
     const [text, setText] = useState(task.text);
 
     const onEnterHandler = (newText: string) => {
-        if (onTextChanged) {
-            onTextChanged({ id: task.id, text: newText });
+        if (onChanged) {
+            onChanged({ id: task.id, text: newText });
 
             setIsEditionMode(!isEditionMode);
         }
