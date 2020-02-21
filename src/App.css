@@ -1,0 +1,4 @@
+div[contenteditable] {
+    padding: 10px;
+    border: 1px solid lightgray;
+}
