@@ -1,10 +1,10 @@
 import React, { KeyboardEvent, useRef, FormEvent } from 'react';
 
-interface Props {
+type Props = {
     text?: string;
     onEnter?: Function;
     onChanging?: Function;
-}
+};
 
 export const Input: React.FC<Props> = ({ text, onEnter, onChanging }) => {
     const inputRef = useRef<HTMLDivElement>(null);
@@ -22,20 +22,23 @@ export const Input: React.FC<Props> = ({ text, onEnter, onChanging }) => {
     };
     const onInputHandler = (e: FormEvent<HTMLElement>) => {
         onChanging && onChanging((e.target as HTMLElement).textContent);
-    }
+    };
 
     const removeContent = () => {
         while (inputRef.current?.firstChild) {
             inputRef.current.removeChild(inputRef.current.firstChild);
         }
-    }
+    };
 
-    return <div
-        ref={inputRef}
-        contentEditable
-        suppressContentEditableWarning
-        onKeyDown={onKeyDownHandler}
-        onInput={onInputHandler}>
-        {text}
-    </div>;
-}
+    return (
+        <div
+            ref={inputRef}
+            contentEditable
+            suppressContentEditableWarning
+            onKeyDown={onKeyDownHandler}
+            onInput={onInputHandler}
+        >
+            {text}
+        </div>
+    );
+};
