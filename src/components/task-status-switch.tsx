@@ -38,7 +38,7 @@ export class TaskStatusSwitch extends Component<Props, ComponentState> {
     }
 
     toggle = () => {
-        const newState = this.service.send('TOGGLE');
+        this.service.send('TOGGLE');
 
         if (this.props.onToggled) {
             const { onToggled } = this.props;

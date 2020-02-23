@@ -1,45 +1,73 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './app.css';
 import { Input } from './components/input';
 import { TaskCard } from './components/task-card';
 import { Task } from './models/task';
 import { Status } from './plugins/status';
 
-const App: React.FC = () => {
-    const [tasks, setTasks] = useState<Array<Task>>([]);
+type ComponentState = {
+    tasks: Array<Task>;
+};
 
-    const onTaskAddingHandler = (text: string) => {
+class App extends React.Component<{}, ComponentState> {
+    state = {
+        tasks: new Array<Task>()
+    };
+
+    constructor(props: any) {
+        super(props);
+
+        const stringedTasks = localStorage.getItem('toodooshka.tasks') || '[]';
+        const tasks = JSON.parse(stringedTasks);
+
+        if (tasks && tasks.length) {
+            this.state.tasks = [...tasks];
+        }
+    }
+
+    setTasks(tasks: Array<Task>) {
+        this.setState({ tasks });
+
+        localStorage.setItem('toodooshka.tasks', JSON.stringify(tasks));
+    }
+
+    onTaskAddingHandler = (text: string) => {
+        const { tasks } = this.state;
         const maxId = tasks.length
             ? tasks.map(t => t.id).reduce((id1, id2) => Math.max(id1, id2))
             : -1;
-        setTasks([{ id: 1 + maxId, text, status: Status.todo }, ...tasks]);
+        this.setTasks([{ id: 1 + maxId, text, status: Status.todo }, ...tasks]);
     };
-    const onTaskChangedHandler = (task: Task) => {
-        setTasks([...tasks.map(t => (t.id === task.id ? task : t))]);
+    onTaskChangedHandler = (task: Task) => {
+        const { tasks } = this.state;
+        this.setTasks([...tasks.map(t => (t.id === task.id ? task : t))]);
     };
-    const onTaskRemovingHandler = (id: number) => {
-        setTasks([...tasks.filter(t => t.id !== id)]);
+    onTaskRemovingHandler = (id: number) => {
+        const { tasks } = this.state;
+        this.setTasks([...tasks.filter(t => t.id !== id)]);
     };
 
-    return (
-        <div>
-            <h1>Toodooshka</h1>
+    render() {
+        return (
+            <div>
+                <h1>Toodooshka</h1>
 
-            <Input onEnter={onTaskAddingHandler}></Input>
+                <Input onEnter={this.onTaskAddingHandler}></Input>
 
-            {tasks.map(t => {
-                return (
-                    <div key={t.id}>
-                        <TaskCard
-                            task={t}
-                            onChanged={onTaskChangedHandler}
-                            onRemoving={onTaskRemovingHandler}
-                        />
-                    </div>
-                );
-            })}
-        </div>
-    );
-};
+                {this.state.tasks.map(t => {
+                    return (
+                        <div key={t.id}>
+                            <TaskCard
+                                task={t}
+                                onChanged={this.onTaskChangedHandler}
+                                onRemoving={this.onTaskRemovingHandler}
+                            />
+                        </div>
+                    );
+                })}
+            </div>
+        );
+    }
+}
 
 export default App;
