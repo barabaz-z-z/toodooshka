@@ -5,11 +5,43 @@ import { TaskCard } from './components/task-card';
 import { Task } from './models/task';
 import { Status } from './plugins/status';
 
+import {
+    withStyles,
+    Theme,
+    Typography,
+    AppBar,
+    Toolbar,
+    Container,
+    Grid,
+    Paper,
+    List,
+    ListItem,
+    Checkbox,
+    ListItemIcon,
+    ListItemText,
+    IconButton,
+    ListItemSecondaryAction
+} from '@material-ui/core';
+import { Styles } from '@material-ui/core/styles/withStyles';
+
+type Props = {
+    classes: Record<'paper', string>;
+};
+
 type ComponentState = {
     tasks: Array<Task>;
 };
 
-class App extends React.Component<{}, ComponentState> {
+const useStyles: Styles<Theme, {}, 'paper'> = (theme: Theme) => ({
+    paper: {
+        marginTop: theme.spacing(8),
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center'
+    }
+});
+
+class App extends React.Component<Props, ComponentState> {
     state = {
         tasks: new Array<Task>()
     };
@@ -48,26 +80,56 @@ class App extends React.Component<{}, ComponentState> {
     };
 
     render() {
+        const { classes } = this.props;
+
         return (
-            <div>
-                <h1>Toodooshka</h1>
+            <Container maxWidth="sm">
+                <AppBar position="static">
+                    <Toolbar>
+                        <Typography variant="body1" color="inherit">
+                            Toodooshka
+                        </Typography>
+                    </Toolbar>
+                </AppBar>
 
-                <Input onEnter={this.onTaskAddingHandler}></Input>
+                <List>
+                    <ListItem>
+                        <ListItemText>
+                            <Input onEnter={this.onTaskAddingHandler}></Input>
+                        </ListItemText>
+                    </ListItem>
 
-                {this.state.tasks.map(t => {
-                    return (
-                        <div key={t.id}>
-                            <TaskCard
+                    {this.state.tasks.map(t => (
+                        <ListItem key={t.id}>
+                            <ListItemIcon>
+                                <Checkbox
+                                    edge="start"
+                                    // checked={checked.indexOf(value) !== -1}
+                                    tabIndex={-1}
+                                    disableRipple
+                                    // inputProps={{ 'aria-labelledby': labelId }}
+                                />
+                            </ListItemIcon>
+                            <ListItemText
+                                // id={t.id}
+                                primary={`Line item ${t.text + 1}`}
+                            />
+                            <ListItemSecondaryAction>
+                                <IconButton edge="end" aria-label="comments">
+                                    {/* <CommentIcon /> */}
+                                </IconButton>
+                            </ListItemSecondaryAction>
+                            {/* <TaskCard
                                 task={t}
                                 onChanged={this.onTaskChangedHandler}
                                 onRemoving={this.onTaskRemovingHandler}
-                            />
-                        </div>
-                    );
-                })}
-            </div>
+                            /> */}
+                        </ListItem>
+                    ))}
+                </List>
+            </Container>
         );
     }
 }
 
-export default App;
+export default withStyles(useStyles)(App);
