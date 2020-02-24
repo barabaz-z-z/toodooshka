@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { interpret, Interpreter, AnyEventObject, State } from 'xstate';
 import TaskStatusMachine from '../plugins/task-status-machine';
 import { nextTick } from '../common/next-tick';
+import { IconButton, Icon } from '@material-ui/core';
+import { Status } from '../plugins/status';
 
 type Props = {
     status: string;
@@ -47,8 +49,14 @@ export class TaskStatusSwitch extends Component<Props, ComponentState> {
     };
 
     render() {
+        const { value: status } = this.state.current
         return (
-            <button onClick={this.toggle}>{this.state.current.value}</button>
+            <IconButton onClick={this.toggle} edge="start">
+                {status === Status.todo && <Icon>radio_button_unchecked</Icon>}
+                {status === Status.doing && <Icon>history</Icon>}
+                {status === Status.failed && <Icon>highlight_off</Icon>}
+                {status === Status.done && <Icon>check_circle_outline</Icon>}
+            </IconButton>
         );
     }
 }

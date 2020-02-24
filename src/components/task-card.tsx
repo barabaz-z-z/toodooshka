@@ -1,7 +1,15 @@
 import React, { useState } from 'react';
 import { Task } from '../models/task';
 import { TaskStatusSwitch } from './task-status-switch';
-import { Input } from './input';
+import { TextField } from './text-field';
+import {
+    Icon,
+    IconButton,
+    ListItem,
+    ListItemIcon,
+    ListItemText,
+    ListItemSecondaryAction,
+} from '@material-ui/core';
 
 type Props = {
     task: Task;
@@ -35,36 +43,48 @@ export const TaskCard: React.FC<Props> = ({ task, onChanged, onRemoving }) => {
     };
 
     return (
-        <div>
-            <TaskStatusSwitch
-                status={task.status}
-                onToggled={onTaskStatusToggledHandler}
-            ></TaskStatusSwitch>
-            {isEditionMode && (
-                <>
-                    <Input
+        <ListItem>
+            <ListItemIcon>
+                <TaskStatusSwitch
+                    status={task.status}
+                    onToggled={onTaskStatusToggledHandler}
+                ></TaskStatusSwitch>
+            </ListItemIcon>
+            <ListItemText>
+                {isEditionMode && (
+                    <TextField
                         text={task.text}
                         onEnter={onEnterHandler}
                         onChanging={onChangingHandler}
                     />
-                    <button onClick={save}>Save</button>
-                </>
-            )}
-            {!isEditionMode && (
-                <>
+                )}
+                {!isEditionMode && (
                     <div>{text}</div>
-                    <button onClick={() => setIsEditionMode(!isEditionMode)}>
-                        Edit
-                    </button>
-                </>
-            )}
-            <button
-                onClick={() => {
-                    if (onRemoving) onRemoving(task.id);
-                }}
-            >
-                Remove
-            </button>
-        </div>
+                )}
+            </ListItemText>
+            <ListItemSecondaryAction>
+                {
+                    isEditionMode
+                        ? (
+                            <IconButton aria-label="save" onClick={save}>
+                                <Icon>save</Icon>
+                            </IconButton>
+                        ) : (
+                            <IconButton aria-label="edit" onClick={() => setIsEditionMode(!isEditionMode)}>
+                                <Icon>edit</Icon>
+                            </IconButton>
+                        )
+                }
+                <IconButton
+                    edge="end"
+                    aria-label="delete"
+                    onClick={() => {
+                        if (onRemoving) onRemoving(task.id);
+                    }}
+                >
+                    <Icon>delete</Icon>
+                </IconButton>
+            </ListItemSecondaryAction>
+        </ListItem>
     );
 };
