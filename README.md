@@ -1,3 +1,21 @@
+## Description
+
+Simple server-less ToDo web application. Based on React. 
+Why it is server-less? Because there is no any API that are charge of sending data to backend and storing it in some database.
+All data is persisted in `localStorage`.
+
+## Demo
+
+Demo is parking on [glitch.com](https://toodooshka.glitch.me).
+
+## Enhancements
+
+- add the button to clean browser localStorage
+- add the button to create new task (creating a task is available by only on pressing the Enter key)
+- fix the style of input in edition mode
+- color the status buttons using relevant color for each status
+- add tooltips
+
 ## Available Scripts
 
 In the project directory, you can run:
